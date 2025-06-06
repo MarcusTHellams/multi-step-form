@@ -1,0 +1,8 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "bracketSameLine": false,
+  "bracketSpacing": true,
+  "printWidth": 100
+}

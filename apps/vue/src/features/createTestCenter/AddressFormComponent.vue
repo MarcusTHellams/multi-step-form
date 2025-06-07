@@ -15,6 +15,12 @@ import {
 import states from 'states-us';
 import VueSelect from 'vue3-select-component';
 
+const digitCheck = (event: KeyboardEvent) => {
+  if ((event.key.length === 1 && isNaN(Number(event.key))) || event.code === 'Space') {
+    event.preventDefault();
+  }
+};
+
 const form = useFormContext<AddressType>();
 const isInternational = computed(() => form.values.countryIsoCd.toLowerCase() === 'us');
 </script>
@@ -133,7 +139,7 @@ const isInternational = computed(() => form.values.countryIsoCd.toLowerCase() ==
       <FormItem>
         <FormLabel>Zip 5</FormLabel>
         <FormControl>
-          <Input type="text" v-bind="componentField" />
+          <Input @keydown="digitCheck" maxlength="5" type="text" v-bind="componentField" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -142,7 +148,7 @@ const isInternational = computed(() => form.values.countryIsoCd.toLowerCase() ==
       <FormItem>
         <FormLabel>Zip 4</FormLabel>
         <FormControl>
-          <Input type="text" v-bind="componentField" />
+          <Input @keydown="digitCheck" maxlength="4" type="text" v-bind="componentField" />
         </FormControl>
         <FormMessage />
       </FormItem>

@@ -23,7 +23,7 @@ export const addAddressRefinement = (schema?: AnyZodObject) => {
         if (!stateCd) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Sate Code is Required',
+            message: 'State Code is Required',
             path: ['stateCd'],
           });
         }

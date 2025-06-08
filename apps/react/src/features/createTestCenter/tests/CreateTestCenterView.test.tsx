@@ -1,91 +1,93 @@
-import { createStore, useStore } from 'zustand';
-import { produce } from 'immer';
+import { useRef } from 'react';
 import { CreateTestCenterView } from '../CreateTestCenterView';
-import { CreateTestCenterStoreContext } from '../createTestCenterStore';
-import type {
-  CreateTestCenterStoreActions,
-  CreateTestCenterStoreType,
-} from '../createTestCenterStore';
-import type { TestCenterStoreType, WhichPerson, initialStore } from 'schemas';
-import type { PropsWithChildren } from 'react';
+import { CreateTestCenterStoreContext, getCreateTestCenterStore } from '../createTestCenterStore';
 import type { UserEvent } from '@testing-library/user-event';
+import type { PropsWithChildren } from 'react';
+import type { TestCenterStoreType } from 'schemas';
+import type { PartialDeep } from 'type-fest';
 import { render, screen, userEvent } from '@/test/helper';
+import selectEvent from 'react-select-event';
 
-const Wrapper = ({ store, children }: PropsWithChildren<{ store: CreateTestCenterStoreType }>) => {
-  return <CreateTestCenterStoreContext value={store}> {children}</CreateTestCenterStoreContext>;
+const Wrapper = ({
+  state,
+  children,
+}: PropsWithChildren<{ state: PartialDeep<TestCenterStoreType> }>) => {
+  const store = useRef(getCreateTestCenterStore(state));
+  return (
+    <CreateTestCenterStoreContext value={store.current}> {children}</CreateTestCenterStoreContext>
+  );
 };
 
 describe('CreateTestCenterView', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
   describe('happy path', () => {
     it('move through steps and successfully submit create the new test center', async () => {
-      const { user, incrementStep } = setup(state2);
+      const alertSpy = vi.spyOn(window, 'alert');
+      const { user } = setup(state2);
       expect(screen.getByRole('heading', { name: 'Test Center' })).toBeInTheDocument();
       await goToNextPage(user);
-      expect(incrementStep).toHaveBeenCalledTimes(1);
       expect(screen.getByRole('heading', { name: 'Primary Coordinator' })).toBeInTheDocument();
+      await goToNextPage(user);
+      expect(screen.getByRole('heading', { name: 'Alternate Coordinator' })).toBeInTheDocument();
+      await goToNextPage(user);
+      expect(screen.getByRole('heading', { name: 'Technical Coordinator' })).toBeInTheDocument();
+      await goToNextPage(user);
+      expect(screen.getByRole('heading', { name: 'Shipping POC' })).toBeInTheDocument();
+      await goToNextPage(user);
+      expect(screen.getByRole('heading', { name: 'Shipping Address' })).toBeInTheDocument();
+      await goToNextPage(user);
+      expect(alertSpy).toHaveBeenCalled();
+    });
+
+    it('move backwards through the steps and keeps the form information intact', async () => {
+      const { user } = setup({ ...structuredClone(state2), step: 6 });
+      expect(screen.getByRole('heading', { name: 'Shipping Address' })).toBeInTheDocument();
+      expect(getInput('Country Iso Code')).toHaveValue('AW');
+      expect(getInput('Address 1')).toHaveValue('19 Clarendon Drive');
+      expect(screen.getByText('Aruba')).toBeInTheDocument();
+      await goToPrevPage(user);
+      expect(screen.getByRole('heading', { name: 'Shipping POC' })).toBeInTheDocument();
+      expect(getInput('First Name')).toHaveValue('Keefe');
+      expect(getInput('Last Name')).toHaveValue('Wilkins');
+      expect(getInput('Email')).toHaveValue('fyzyqyqi@mailinator.com');
+      await goToPrevPage(user);
+      expect(screen.getByRole('heading', { name: 'Technical Coordinator' })).toBeInTheDocument();
+      expect(getInput('First Name')).toHaveValue('Maxine');
+      expect(getInput('Last Name')).toHaveValue('Sargent');
+      expect(getInput('Email')).toHaveValue('xubumuwoje@mailinator.com');
+
+      await goToPrevPage(user);
+      expect(screen.getByRole('heading', { name: 'Alternate Coordinator' })).toBeInTheDocument();
+      expect(getInput('First Name')).toHaveValue('Tatum');
+      expect(getInput('Last Name')).toHaveValue('Wells');
+      expect(getInput('Email')).toHaveValue('tesonob@mailinator.com');
+
+      await goToPrevPage(user);
+      expect(screen.getByRole('heading', { name: 'Primary Coordinator' })).toBeInTheDocument();
+      expect(getInput('First Name')).toHaveValue('Azalia');
+      expect(getInput('Last Name')).toHaveValue('Robles');
+      expect(getInput('Email')).toHaveValue('xilawov@mailinator.com');
+
+      await goToPrevPage(user);
+      expect(screen.getByRole('heading', { name: 'Test Center' })).toBeInTheDocument();
+      expect(getInput('Country Iso Code')).toHaveValue('US');
+      expect(getInput('Address 1')).toHaveValue('887 First Lane');
+      expect(getStateSelect()).toHaveTextContent('Virginia');
+      expect(screen.getByText('United States of America')).toBeInTheDocument();
     });
   });
 });
 
-const setup = (_state: TestCenterStoreType) => {
+const setup = (_state: PartialDeep<TestCenterStoreType>) => {
   const user = userEvent.setup();
-  const incrementStep = vi.fn();
-  const decrementStep = vi.fn();
-  const setStep = vi.fn();
-  const setReadyToSubmit = vi.fn();
-  const updateTestCenterInfo = vi.fn();
-  const updatePerson = vi.fn();
-  const updateShippingAddress = vi.fn();
-
-  const store = createStore<TestCenterStoreType & CreateTestCenterStoreActions>()((set) => ({
-    ..._state,
-    incrementStep: incrementStep.mockImplementation(() => set(({ step }) => ({ step: step + 1 }))),
-    decrementStep: decrementStep.mockImplementation(() => set(({ step }) => ({ step: step - 1 }))),
-    setStep: setStep.mockImplementation((newStep) => set(() => ({ step: newStep }))),
-    setReadyToSubmit: setReadyToSubmit.mockImplementation((newReady) =>
-      set(() => ({ readyToSubmit: newReady })),
-    ),
-    updateTestCenterInfo: updateTestCenterInfo.mockImplementation(
-      (testCenterName, testCenterType, reportingAddress) =>
-        set((state) =>
-          produce(state, (draft) => {
-            draft.testCenter.testCenterName = testCenterName;
-            draft.testCenter.testCenterType = testCenterType;
-            draft.testCenter.reportingAddress = reportingAddress;
-          }),
-        ),
-    ),
-    updatePerson: updatePerson.mockImplementation((whichPerson, person) =>
-      set((state) =>
-        produce(state, (draft) => {
-          draft.testCenter[whichPerson as WhichPerson] = person;
-        }),
-      ),
-    ),
-    updateShippingAddress: updateShippingAddress.mockImplementation((address) =>
-      set((state) =>
-        produce(state, (draft) => {
-          draft.testCenter.shippingAddress = address;
-        }),
-      ),
-    ),
-  }));
-
   const result = render(
-    <Wrapper store={store}>
+    <Wrapper state={_state}>
       <CreateTestCenterView />
     </Wrapper>,
   );
-
   return {
-    incrementStep,
-    decrementStep,
-    setStep,
-    setReadyToSubmit,
-    updateTestCenterInfo,
-    updatePerson,
-    updateShippingAddress,
-    store,
     result,
     user,
   };
@@ -167,4 +169,16 @@ const goToNextPage = async (user: UserEvent) => {
 const goToPrevPage = async (user: UserEvent) => {
   const prev = getPrevButton();
   await user.click(prev);
+};
+
+const getInput = (name: string) => {
+  return screen.getByRole('textbox', { name });
+};
+
+const getCountrySelect = () => {
+  return screen.getByLabelText('Country');
+};
+
+const getStateSelect = () => {
+  return screen.getByRole('combobox', { name: 'State' });
 };

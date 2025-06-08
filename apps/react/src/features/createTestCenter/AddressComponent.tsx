@@ -1,53 +1,45 @@
-import { useFormContext } from 'react-hook-form'
-import states from 'states-us'
-import countries from 'world-countries'
-import SELECT from 'react-select'
-import { getCountryIsoCd, getModifiedCountries, getStateCd } from 'schemas'
-import type { AddressType } from 'schemas'
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { useFormContext } from 'react-hook-form';
+import states from 'states-us';
+import countries from 'world-countries';
+import SELECT from 'react-select';
+import { getCountryIsoCd, getModifiedCountries, getStateCd } from 'schemas';
+import type { AddressType } from 'schemas';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
-const countrySelectLabel = '-- Select a Country --'
+const countrySelectLabel = '-- Select a Country --';
 
 const digitCheck = (event: React.KeyboardEvent<HTMLInputElement>) => {
   if (event.key.length === 1 && isNaN(Number(event.key))) {
-    event.preventDefault()
+    event.preventDefault();
   }
-}
+};
 
 const getCountryOption = (countryName: string) => {
-  const _country = countries.find(
-    (country) => country.name.official === countryName,
-  )
+  const _country = countries.find((country) => country.name.official === countryName);
   if (_country) {
     return {
       value: _country.name.official,
       label: _country.name.official,
-    }
+    };
   }
   return {
     value: '',
     label: countrySelectLabel,
-  }
-}
+  };
+};
 
 export const AddressComponent = () => {
-  const form = useFormContext<AddressType>()
+  const form = useFormContext<AddressType>();
 
-  const isInternational = form.watch('countryIsoCd').toLowerCase() !== 'us'
+  const isInternational = form.watch('countryIsoCd').toLowerCase() !== 'us';
 
   return (
     <>
@@ -60,20 +52,18 @@ export const AddressComponent = () => {
               <FormLabel htmlFor={field.name}>Country</FormLabel>
               <FormControl>
                 <SELECT
+                  isDisabled={field.disabled}
                   name={field.name}
                   inputId={field.name}
+                  ref={field.ref}
                   value={getCountryOption(field.value)}
                   onChange={(newValue) => {
-                    field.onChange(newValue?.value || '')
-                    form.setValue(
-                      'countryIsoCd',
-                      getCountryIsoCd(newValue?.value || ''),
-                      {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                        shouldValidate: true,
-                      },
-                    )
+                    field.onChange(newValue?.value || '');
+                    form.setValue('countryIsoCd', getCountryIsoCd(newValue?.value || ''), {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: true,
+                    });
                   }}
                   onBlur={field.onBlur}
                   options={[
@@ -90,7 +80,7 @@ export const AddressComponent = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )
+          );
         }}
       />
       <FormField
@@ -105,7 +95,7 @@ export const AddressComponent = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )
+          );
         }}
       />
       <FormField
@@ -120,7 +110,7 @@ export const AddressComponent = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )
+          );
         }}
       />
       <FormField
@@ -135,7 +125,7 @@ export const AddressComponent = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )
+          );
         }}
       />
       <FormField
@@ -150,7 +140,7 @@ export const AddressComponent = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )
+          );
         }}
       />
       <FormField
@@ -165,7 +155,7 @@ export const AddressComponent = () => {
               </FormControl>
               <FormMessage />
             </FormItem>
-          )
+          );
         }}
       />
       {!isInternational ? (
@@ -179,13 +169,13 @@ export const AddressComponent = () => {
                   <FormLabel htmlFor={field.name}>State</FormLabel>
                   <Select
                     onValueChange={(newValue) => {
-                      const _newValue = newValue === 'noop' ? '' : newValue
-                      field.onChange(_newValue)
+                      const _newValue = newValue === 'noop' ? '' : newValue;
+                      field.onChange(_newValue);
                       form.setValue('stateCd', getStateCd(_newValue), {
                         shouldDirty: true,
                         shouldTouch: true,
                         shouldValidate: true,
-                      })
+                      });
                     }}
                     value={!field.value ? 'noop' : field.value}
                   >
@@ -211,7 +201,7 @@ export const AddressComponent = () => {
                   </Select>
                   <FormMessage />
                 </FormItem>
-              )
+              );
             }}
           />
           <FormField
@@ -226,7 +216,7 @@ export const AddressComponent = () => {
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )
+              );
             }}
           />
           <FormField
@@ -237,16 +227,11 @@ export const AddressComponent = () => {
                 <FormItem>
                   <FormLabel htmlFor={field.name}>Zip 5</FormLabel>
                   <FormControl>
-                    <Input
-                      onKeyDown={digitCheck}
-                      maxLength={5}
-                      id={field.name}
-                      {...field}
-                    />
+                    <Input onKeyDown={digitCheck} maxLength={5} id={field.name} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )
+              );
             }}
           />
           <FormField
@@ -257,16 +242,11 @@ export const AddressComponent = () => {
                 <FormItem>
                   <FormLabel htmlFor={field.name}>Zip 4</FormLabel>
                   <FormControl>
-                    <Input
-                      onKeyDown={digitCheck}
-                      maxLength={4}
-                      id={field.name}
-                      {...field}
-                    />
+                    <Input onKeyDown={digitCheck} maxLength={4} id={field.name} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )
+              );
             }}
           />
         </>
@@ -278,15 +258,13 @@ export const AddressComponent = () => {
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel htmlFor={field.name}>
-                    International Postal Code
-                  </FormLabel>
+                  <FormLabel htmlFor={field.name}>International Postal Code</FormLabel>
                   <FormControl>
                     <Input id={field.name} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )
+              );
             }}
           />
           <FormField
@@ -301,11 +279,11 @@ export const AddressComponent = () => {
                   </FormControl>
                   <FormMessage />
                 </FormItem>
-              )
+              );
             }}
           />
         </>
       )}
     </>
-  )
-}
+  );
+};

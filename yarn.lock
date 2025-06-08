@@ -2035,6 +2035,20 @@
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-5.2.4.tgz#9e8a512eb174bfc2a333ba959bbf9de428d89ad8"
   integrity sha512-7Yx/SXSOcQq5HiiV3orevHUFn+pmMB4cgbEkDYgnkUWb0WfeQ/wa2yFv6D5ICiCQOVpjA7vYDXrC7AGO8yjDHA==
 
+"@vitest/browser@^3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@vitest/browser/-/browser-3.2.2.tgz#f06a3718ff694d705299ef56fbda04cbd1f606cd"
+  integrity sha512-LJk8ZhCGhgG6G6jFFJ9LX83ibRY8FszLuu9zPaYFDrcHbBwNXwt1v06HRs/vHVYxwjw3/BGzSIgn9Et2P6rCiA==
+  dependencies:
+    "@testing-library/dom" "^10.4.0"
+    "@testing-library/user-event" "^14.6.1"
+    "@vitest/mocker" "3.2.2"
+    "@vitest/utils" "3.2.2"
+    magic-string "^0.30.17"
+    sirv "^3.0.1"
+    tinyrainbow "^2.0.0"
+    ws "^8.18.2"
+
 "@vitest/coverage-v8@3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@vitest/coverage-v8/-/coverage-v8-3.2.2.tgz#99242dbe6686b03889f8a052ec9df37af121f43b"
@@ -2337,7 +2351,7 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.16.tgz#d5ea7671182742192938a4b4cbf86ef12bef7418"
   integrity sha512-c/0fWy3Jw6Z8L9FmTyYfkpM5zklnqqa9+a6dz3DvONRKW2NEbh46BP0FHuLFSWi2TnQEtp91Z6zOWNrU6QiyPg==
 
-"@vue/test-utils@^2.4.1":
+"@vue/test-utils@^2.4.1", "@vue/test-utils@^2.4.6":
   version "2.4.6"
   resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-2.4.6.tgz#7d534e70c4319d2a587d6a3b45a39e9695ade03c"
   integrity sha512-FMxEjOpYNYiFe0GkaHsnJPXFHxQ6m4t8vI/ElPGpMWxZKpmRvQ33OIrvRXemy6yha03RxhOlQuy+gZMC3CQSow==
@@ -3431,6 +3445,11 @@ fs-extra@^11.2.0:
     graceful-fs "^4.2.0"
     jsonfile "^6.0.1"
     universalify "^2.0.0"
+
+fsevents@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
+  integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
 
 fsevents@~2.3.2, fsevents@~2.3.3:
   version "2.3.3"
@@ -4611,6 +4630,20 @@ pinia@^3.0.1:
   dependencies:
     "@vue/devtools-api" "^7.7.2"
 
+playwright-core@1.52.0:
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.52.0.tgz#238f1f0c3edd4ebba0434ce3f4401900319a3dca"
+  integrity sha512-l2osTgLXSMeuLZOML9qYODUQoPPnUsKsb5/P6LJ2e6uPKXUdPK5WYhN4z03G+YNbWmGDY4YENauNu4ZKczreHg==
+
+playwright@^1.52.0:
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.52.0.tgz#26cb9a63346651e1c54c8805acfd85683173d4bd"
+  integrity sha512-JAwMNMBlxJ2oD1kce4KPtMkDeKGHQstdpFPcPH3maElAXon/QZeTvtsfXmTMRyO9TslfoYOXkSsvao2nE1ilTw==
+  dependencies:
+    playwright-core "1.52.0"
+  optionalDependencies:
+    fsevents "2.3.2"
+
 possible-typed-array-names@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/possible-typed-array-names/-/possible-typed-array-names-1.1.0.tgz#93e3582bc0e5426586d9d07b79ee40fc841de4ae"
@@ -5627,6 +5660,13 @@ vite-plugin-vue-inspector@^5.3.1:
   optionalDependencies:
     fsevents "~2.3.3"
 
+vitest-browser-vue@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/vitest-browser-vue/-/vitest-browser-vue-0.2.0.tgz#3a4ea7759725e4cae19b2df92369cae5c9f86df4"
+  integrity sha512-18v3uUQebbtSba2jbqcRvqfUCebd3f0nFA3BLKFZF9P0vnj7QgOm2JAxlcCA1ytNSnyzV3OtnNeNpThRaW6AfA==
+  dependencies:
+    "@vue/test-utils" "^2.4.6"
+
 vitest@^3.0.5, vitest@^3.1.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-3.2.2.tgz#498965ba6cdd5a56e0aea36b6fc71fe862592aaa"
@@ -5854,7 +5894,7 @@ wrap-ansi@^8.1.0:
     string-width "^5.0.1"
     strip-ansi "^7.0.1"
 
-ws@^8.18.0:
+ws@^8.18.0, ws@^8.18.2:
   version "8.18.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.2.tgz#42738b2be57ced85f46154320aabb51ab003705a"
   integrity sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==

@@ -4,8 +4,14 @@ import { useCreateTestCenterProvider } from './createTestCenterStore';
 import TestCenterInfoComponent from './TestCenterInfoComponent.vue';
 import PersonStepComponent from './PersonStepComponent.vue';
 import ShippingAddressComponent from './ShippingAddressComponent.vue';
+import type { TestCenterStoreType } from 'schemas';
+import type { PartialDeep } from 'type-fest';
 
-const { state, setReadyToSubmit } = useCreateTestCenterProvider();
+const { createTestCenterState } = defineProps<{
+  createTestCenterState?: PartialDeep<TestCenterStoreType>;
+}>();
+
+const { state, setReadyToSubmit } = useCreateTestCenterProvider(createTestCenterState);
 const { step, readyToSubmit, testCenter } = toRefs(state);
 
 watch(readyToSubmit, (newReady) => {

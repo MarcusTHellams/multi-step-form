@@ -11,6 +11,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    passWitNotTests: true,
+    reporters: ['verbose'],
+    setupFiles: ['./vitest.setup.ts'],
+    passWithNoTests: true,
   },
   resolve: {
     alias: {

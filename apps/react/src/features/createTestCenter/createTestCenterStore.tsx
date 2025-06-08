@@ -12,7 +12,7 @@ import type {
 } from 'schemas'
 import type { PartialDeep } from 'type-fest'
 
-type CreateTestCenterStoreType = ReturnType<typeof getCreateTestCenterStore>
+export type CreateTestCenterStoreType = ReturnType<typeof getCreateTestCenterStore>
 
 export const CreateTestCenterStoreContext = createContext<
   CreateTestCenterStoreType | undefined
